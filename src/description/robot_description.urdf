@@ -4,7 +4,7 @@
   <!-- Define robot constants -->
   <xacro:property name="base_width" value="0.10"/>
   <xacro:property name="base_length" value="0.215"/>
-  <xacro:property name="base_height" value="0.005"/>
+  <xacro:property name="base_height" value="0.04"/>
 
   <xacro:property name="wheel_radius" value="0.034"/>
   <xacro:property name="wheel_width" value="0.025"/>
@@ -13,6 +13,9 @@
   <xacro:property name="wheel_xoff" value="0.03"/>
 
   <xacro:property name="caster_xoff" value="0.085"/>
+
+  <xacro:property name="lidar_xoff" value="0.04"/>
+  <xacro:property name="lidar_height" value="0.06"/>
 
 
   <!-- Robot Base -->
@@ -66,8 +69,8 @@
   <link name="front_caster">
     <visual>
       <geometry>
-        <!--sphere radius="${(wheel_radius+wheel_zoff-(base_height/2))}"/-->
-        <sphere radius="${(wheel_radius+wheel_zoff)/2}"/>
+        <sphere radius="${(wheel_radius+wheel_zoff-(base_height/2))}"/>
+        <!-- <sphere radius="${(wheel_radius+wheel_zoff)/2}"/> -->
       </geometry>
       <material name="Cyan">
         <color rgba="0 1.0 1.0 1.0"/>
@@ -78,8 +81,8 @@
   <joint name="caster_joint" type="fixed">
     <parent link="base_link"/>
     <child link="front_caster"/>
-    <origin xyz="${caster_xoff} 0.0 ${-((wheel_radius+wheel_zoff)/2)}" rpy="0 0 0"/>
-    <!--origin xyz="${caster_xoff} 0.0 ${-(base_height/2)}" rpy="0 0 0"/-->
+    <!-- <origin xyz="${caster_xoff} 0.0 ${-((wheel_radius+wheel_zoff)/2)}" rpy="0 0 0"/> -->
+    <!origin xyz="${caster_xoff} 0.0 ${-(base_height/2)}" rpy="0 0 0"/>
   </joint>
 
 <!-- Laidar -->
@@ -87,7 +90,7 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-       <cylinder radius="0.0508" length="0.055"/>
+       <cylinder radius="0.035" length="0.06"/>
     </geometry>
   </visual>
 </link>
@@ -95,7 +98,7 @@
 <joint name="lidar_joint" type="fixed">
   <parent link="base_link"/>
   <child link="laser"/>
-  <origin xyz="0.05 0 0.03" rpy="0 0 0"/>
+  <origin xyz="${lidar_xoff} 0.0 ${base_height/2+lidar_height/2}" rpy="0 0 0"/>
 </joint>
 
 
