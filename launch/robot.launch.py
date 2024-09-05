@@ -35,13 +35,13 @@ def generate_launch_description():
     #     arguments=['-d', LaunchConfiguration('rvizconfig')],
     # )
 
-    robot_localization_node = launch_ros.actions.Node(
-        package='robot_localization',
-        executable='ekf_node',
-        name='ekf_filter_node',
-        output='screen',
-        parameters=[os.path.join(pkg_share, 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
-    )
+    # robot_localization_node = launch_ros.actions.Node(
+    #     package='robot_localization',
+    #     executable='ekf_node',
+    #     name='ekf_filter_node',
+    #     output='screen',
+    #     parameters=[os.path.join(pkg_share, 'config/ekf.yaml'), {'use_sim_time': LaunchConfiguration('use_sim_time')}]
+    # )
 
     return launch.LaunchDescription([
         # launch.actions.DeclareLaunchArgument(name='gui', default_value='True',
@@ -55,6 +55,6 @@ def generate_launch_description():
         # joint_state_publisher_node,
         # joint_state_publisher_gui_node,
         robot_state_publisher_node,
-        robot_localization_node
+        # robot_localization_node
         # rviz_node
     ])
