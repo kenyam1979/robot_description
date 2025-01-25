@@ -1,4 +1,5 @@
-### ekf config file ###
+### ekf config file
+### Note: This config file is only used for Gazebo simulation
 ekf_filter_node:
     ros__parameters:
 # The frequency, in Hz, at which the filter will output a position estimate. Note that the filter will not begin

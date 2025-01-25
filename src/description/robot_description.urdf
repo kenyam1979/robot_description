@@ -4,18 +4,27 @@
   <!-- Define robot constants -->
   <xacro:property name="base_width" value="0.10" />
   <xacro:property name="base_length" value="0.215" />
-  <xacro:property name="base_height" value="0.04" />
+  <xacro:property name="base_height" value="0.003" />
 
   <xacro:property name="wheel_radius" value="0.034" />
   <xacro:property name="wheel_width" value="0.025" />
   <xacro:property name="wheel_ygap" value="0.015" />
-  <xacro:property name="wheel_zoff" value="0.015" />
-  <xacro:property name="wheel_xoff" value="0.03" />
+  <xacro:property name="wheel_zoff" value="0.012" />
+  <xacro:property name="wheel_xoff" value="0.037" />
 
   <xacro:property name="caster_xoff" value="0.085" />
+  <xacro:property name="caster_radius" value="0.01" />
 
-  <xacro:property name="lidar_xoff" value="0.04" />
+  <xacro:property name="caster_base_width" value="0.035" />
+  <xacro:property name="caster_base_length" value="0.028" />
+  <xacro:property name="caster_base_height" value="${wheel_radius+wheel_zoff-(base_height/2)-(caster_radius*2)}" />
+
+
+  <xacro:property name="lidar_xoff" value="0.05" />
   <xacro:property name="lidar_height" value="0.06" />
+
+  <xacro:property name="battery_height" value="0.025" />
+  <xacro:property name="battery_length" value="0.09" />
 
 
   <!-- Define inertial property macros  -->
@@ -64,7 +73,7 @@
       </geometry>
     </collision>
 
-    <xacro:box_inertia m="0.3202" w="${base_width}" d="${base_length}" h="${base_height}" />
+    <xacro:box_inertia m="0.2132" w="${base_width}" d="${base_length}" h="${base_height}" />
 
   </link>
 
@@ -121,22 +130,22 @@
   <link name="front_caster">
     <visual>
       <geometry>
-        <sphere radius="${(wheel_radius+wheel_zoff-(base_height/2))}" />
+        <sphere radius="${caster_radius}" />
         <!-- <sphere radius="${(wheel_radius+wheel_zoff)/2}"/> -->
       </geometry>
-      <material name="Cyan">
-        <color rgba="0 1.0 1.0 1.0" />
+      <material name="Gray">
+        <color rgba="0.5 0.5 0.5 1.0" />
       </material>
     </visual>
 
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <sphere radius="${(wheel_radius+wheel_zoff-(base_height/2))}" />
+        <sphere radius="${caster_radius}" />
       </geometry>
     </collision>
 
-    <xacro:sphere_inertia m="0.01" r="${(wheel_radius+wheel_zoff-(base_height/2))}" />
+    <xacro:sphere_inertia m="0.01" r="${caster_radius}" />
 
   </link>
 
@@ -144,9 +153,59 @@
     <parent link="base_link" />
     <child link="front_caster" />
     <!-- <origin xyz="${caster_xoff} 0.0 ${-((wheel_radius+wheel_zoff)/2)}" rpy="0 0 0"/> -->
-    <origin xyz="${caster_xoff} 0.0 ${-(base_height/2)}" rpy="0 0 0" />
+    <origin xyz="${caster_xoff} 0.0 -${caster_radius+caster_base_height+(base_height/2)}" rpy="0 0 0" />
   </joint>
 
+  <!-- Caster Base -->
+  <link name="caster_base">
+    <visual>
+      <geometry>
+        <box size="${caster_base_length} ${caster_base_width} ${caster_base_height}" />
+      </geometry>
+      <material name="Cyan">
+        <color rgba="0 1.0 1.0 1.0" />
+      </material>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${caster_base_length} ${caster_base_width} ${caster_base_height}" />
+      </geometry>
+    </collision>
+
+    <xacro:box_inertia m="0.03" w="${caster_base_width}" d="${caster_base_length}" h="${caster_base_height}" />
+
+  </link>
+
+  <joint name="caster_base_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="caster_base" />
+    <origin xyz="${caster_xoff} 0.0 -${base_height/2+caster_base_height/2}" />
+  </joint>
+
+  <!-- Battery -->
+  <link name="battery">
+    <visual>
+      <geometry>
+        <box size="${battery_length} ${base_width} ${battery_height}" />
+      </geometry>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${battery_length} ${base_width} ${battery_height}" />
+      </geometry>
+    </collision>
+
+    <xacro:box_inertia m="0.107" w="${base_width}" d="${battery_length}" h="${battery_height}" />
+
+  </link>
+
+  <joint name="battery_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="battery" />
+    <origin xyz="${lidar_xoff} 0.0 ${base_height/2+battery_height/2}" />
+  </joint>
 
   <!-- Laidar -->
   <link name="laser">
@@ -174,7 +233,7 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link" />
     <child link="laser" />
-    <origin xyz="${lidar_xoff} 0.0 ${base_height/2+lidar_height/2}" rpy="0 0 0" />
+    <origin xyz="${lidar_xoff} 0.0 ${base_height/2+battery_height+lidar_height/2}" rpy="0 0 0" />
   </joint>
 
   <gazebo reference="laser">
@@ -234,7 +293,7 @@
   <joint name="imu_joint" type="fixed">
     <parent link="base_link" />
     <child link="imu_link" />
-    <origin xyz="${lidar_xoff} 0.0 ${base_height/2 + 0.005}" />
+    <origin xyz="${lidar_xoff} 0.0 ${base_height/2+battery_height+0.005}" />
   </joint>
 
   <gazebo reference="imu_link">
