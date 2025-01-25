@@ -19,11 +19,12 @@ This includes robot's URDF, config and launch files.
 │   └── test.launch.py                      # Gazebo launch
 ├── package.xml
 ├── rviz
-│   ├── nav2_default_view.rviz
+│   ├── nav2_default_view.rviz              # RViz2 config for navigation
 │   └── urdf_config.rviz
 ├── src
 │   └── description
 │       └── robot_description.urdf          # Robot definition
-└── world
-    └── map.sdf
+├── world
+|    └── map.sdf
+└── README.md
 ```
