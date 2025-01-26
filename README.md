@@ -25,6 +25,6 @@ This includes robot's URDF, config and launch files.
 │   └── description
 │       └── robot_description.urdf          # Robot definition
 ├── world
-|    └── map.sdf
+|   └── map.sdf
 └── README.md
 ```
