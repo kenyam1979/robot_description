@@ -211,6 +211,10 @@
     <origin xyz="${caster_xoff} 0.0 -${base_height/2+caster_base_height/2}" />
   </joint>
 
+  <gazebo reference="front_caster">
+    <mu1 value="0.1" />
+    <mu2 value="0.1" />
+  </gazebo>
 
   <!-- Battery Box -->
   <link name="battery">
@@ -440,7 +444,7 @@
       <wheel_diameter>${wheel_radius*2}</wheel_diameter>
 
       <!-- limits -->
-      <max_wheel_torque>0.1</max_wheel_torque>
+      <max_wheel_torque>0.2</max_wheel_torque>
       <max_wheel_acceleration>0.5</max_wheel_acceleration>
 
       <!-- output -->
