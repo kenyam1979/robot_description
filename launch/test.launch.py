@@ -1,3 +1,7 @@
+##################################################
+#####  Launch file for Gazebo simulation     #####
+##################################################
+
 import launch
 from launch.substitutions import Command, LaunchConfiguration
 import launch_ros
@@ -6,8 +10,8 @@ import os
 def generate_launch_description():
     pkg_share = launch_ros.substitutions.FindPackageShare(package='robot_description').find('robot_description')
     default_model_path = os.path.join(pkg_share, 'src/description/robot_description.urdf')
-    # default_rviz_config_path = os.path.join(pkg_share, 'rviz/urdf_config.rviz')
     default_rviz_config_path = os.path.join(pkg_share, 'rviz/nav2_default_view.rviz')
+
     world_path = os.path.join(pkg_share, 'world/map.sdf')
 
     robot_state_publisher_node = launch_ros.actions.Node(
@@ -21,14 +25,7 @@ def generate_launch_description():
         name='joint_state_publisher',
         arguments=[default_model_path],
         # parameters=[{'robot_description': Command(['xacro ', default_model_path])}],
-        # condition=launch.conditions.UnlessCondition(LaunchConfiguration('gui'))
     )
-    # joint_state_publisher_gui_node = launch_ros.actions.Node(
-    #     package='joint_state_publisher_gui',
-    #     executable='joint_state_publisher_gui',
-    #     name='joint_state_publisher_gui',
-    #     condition=launch.conditions.IfCondition(LaunchConfiguration('gui'))
-    # )
 
     rviz_node = launch_ros.actions.Node(
         package='rviz2',
@@ -56,8 +53,6 @@ def generate_launch_description():
 
 
     return launch.LaunchDescription([
-        # launch.actions.DeclareLaunchArgument(name='gui', default_value='True',
-        #                                     description='Flag to enable joint_state_publisher_gui'),
         launch.actions.DeclareLaunchArgument(name='model', default_value=default_model_path,
                                             description='Absolute path to robot urdf file'),
         launch.actions.DeclareLaunchArgument(name='rvizconfig', default_value=default_rviz_config_path,
@@ -67,7 +62,6 @@ def generate_launch_description():
         launch.actions.ExecuteProcess(cmd=['gazebo', '--verbose', '-s', 'libgazebo_ros_init.so', '-s', 'libgazebo_ros_factory.so', world_path], 
                                       output='screen'),
         joint_state_publisher_node,
-        # joint_state_publisher_gui_node,
         robot_state_publisher_node,
         spawn_entity,
         robot_localization_node,
