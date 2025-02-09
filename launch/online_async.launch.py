@@ -3,16 +3,24 @@
 ##################################################
 
 import os
+
+import launch_ros
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+
 from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
+
+    pkg_share = launch_ros.substitutions.FindPackageShare(package='robot_description').find('robot_description')
+    default_rviz_config_path = os.path.join(pkg_share, 'rviz/nav2_default_view.rviz')
+
     use_sim_time = LaunchConfiguration('use_sim_time')
     slam_params_file = LaunchConfiguration('slam_params_file')
+    rviz_params_file = LaunchConfiguration('rviz_params_file')
 
     declare_use_sim_time_argument = DeclareLaunchArgument(
         'use_sim_time',
@@ -25,6 +33,11 @@ def generate_launch_description():
                                    'config', 'mapper_params_online_async.yaml'),
         description='Full path to the ROS2 parameters file to use for the slam_toolbox node')
 
+    declare_rviz_params_file_cmd = DeclareLaunchArgument(
+        'rviz_params_file',
+         default_value=default_rviz_config_path, 
+         description='Absolute path to rviz config file')
+
     start_async_slam_toolbox_node = Node(
         parameters=[
           slam_params_file,
@@ -35,10 +48,20 @@ def generate_launch_description():
         name='slam_toolbox',
         output='screen')
 
+    start_rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        output='screen',
+        arguments=['-d', rviz_params_file])
+
+
     ld = LaunchDescription()
 
     ld.add_action(declare_use_sim_time_argument)
     ld.add_action(declare_slam_params_file_cmd)
+    ld.add_action(declare_rviz_params_file_cmd)
     ld.add_action(start_async_slam_toolbox_node)
+    ld.add_action(start_rviz_node)
 
     return ld
