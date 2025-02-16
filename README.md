@@ -11,7 +11,7 @@ This includes robot's URDF, config and launch files.
 ├── config
 │   ├── ekf.yaml                            # EKF config for localization
 │   ├── mapper_params_online_async.yaml     # SLAM config
-│   └── ros_gz_bridge.yaml                  # Bridge config for Gazebo Ingition 
+│   └── ros_gz_bridge.yaml                  # Bridge config for Gazebo Ingition (Fortress)
 │
 ├── launch
 │   ├── display.launch.py                   # Rviz2 launch
