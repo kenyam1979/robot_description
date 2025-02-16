@@ -35,6 +35,4 @@ This includes robot's URDF, config and launch files.
 ├── CMakeLists.txt
 ├── package.xml
 └── README.md
-
-
 ```
