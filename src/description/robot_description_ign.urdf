@@ -442,7 +442,7 @@
 
       <!-- kinematics -->
       <wheel_separation>${base_width+wheel_ygap*2+wheel_width}</wheel_separation>
-      <wheel_radius>${wheel_radius*2}</wheel_radius>
+      <wheel_radius>${wheel_radius}</wheel_radius>
 
       <!-- limits -->
       <max_linear_acceleration>0.5</max_linear_acceleration>
