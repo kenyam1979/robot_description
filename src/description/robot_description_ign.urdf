@@ -41,6 +41,11 @@
   <xacro:property name="raspi_length" value="0.056" />
   <xacro:property name="raspi_height" value="0.03" />
 
+  <xacro:property name="camera_xoff" value="0.125" />
+  <xacro:property name="camera_width" value="0.03" />
+  <xacro:property name="camera_length" value="0.03" />
+  <xacro:property name="camera_height" value="0.03" />
+
   <!-- Mass in kg -->
   <xacro:property name="base_mass" value="0.213" />
   <xacro:property name="wheel_mass" value="0.028" />
@@ -49,6 +54,7 @@
   <xacro:property name="lidar_mass" value="0.17" />
   <xacro:property name="imu_mass" value="0.0544" />
   <xacro:property name="raspi_mass" value="0.047" />
+  <xacro:property name="camera_mass" value="0.047" />
 
 
   <!--==================================================
@@ -431,6 +437,69 @@
           </z>
         </linear_acceleration>
       </imu>
+    </sensor>
+  </gazebo>
+
+  <!-- Camera -->
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="${camera_length} ${camera_width} ${camera_height}" />
+      </geometry>
+      <material name="Green">
+        <color rgba="0 1.0 0.0 1.0" />
+      </material>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${camera_length} ${camera_width} ${camera_height}" />
+      </geometry>
+    </collision>
+
+    <xacro:box_inertia m="${camera_mass}" w="${camera_width}" d="${camera_length}"
+      h="${camera_height}" />
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="camera_link" />
+    <origin xyz="${camera_xoff} 0.0 ${base_height/2+battery_height+camera_height/2}" />
+  </joint>
+
+  <gazebo reference="camera_link">
+    <sensor name="camera" type="camera">
+      <update_rate>10.0</update_rate>
+      <always_on>true</always_on>
+      <ignition_frame_id>camera_link</ignition_frame_id>
+      <pose>0 0 0 0 0 0</pose>
+      <topic>/image_raw</topic>
+      <camera name="logitech_camera">
+        <camera_info_topic>/camera_info</camera_info_topic>
+        <horizontal_fov>1.2</horizontal_fov>
+        <image>
+          <format>R8G8B8</format>
+          <width>800</width>
+          <height>600</height>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+        <distortion>
+          <k1>-0.25</k1>
+          <k2>0.12</k2>
+          <k3>0.0</k3>
+          <p1>0.0</p1>
+          <p2>0.0</p2>
+          <center>0.5 0.5</center>
+        </distortion>
+      </camera>
     </sensor>
   </gazebo>
 

@@ -89,6 +89,12 @@ def generate_launch_description():
         ],
         output='screen',
     )
+    gz_image_bridge_node = Node(
+        package='ros_gz_image',
+        executable='image_bridge',
+        arguments=['/image_raw'],
+        output='screen',
+    )
 
     robot_localization_node = Node(
         package='robot_localization',
@@ -109,7 +115,6 @@ def generate_launch_description():
         arguments=['-d', LaunchConfiguration('rvizconfig')],
     )
 
-
     # Initiate config, launch files and nodes
     return launch.LaunchDescription(
         [
@@ -120,6 +125,7 @@ def generate_launch_description():
             gz_sim_launch,
             gz_spawn_node,
             gz_bridge_node,
+            gz_image_bridge_node,
             robot_state_publisher_node,
             robot_localization_node,
             rviz_node,
